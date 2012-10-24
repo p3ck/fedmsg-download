@@ -1,9 +1,0 @@
-[moksha.producer]
-
-
-[moksha.consumer]
-downloader = fedmsg_downloader.consumer:RsyncConsumer
-
-[console_scripts]
-fedmsg-downloader = fedmsg_downloader.command:download
-

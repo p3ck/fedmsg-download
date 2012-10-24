@@ -27,7 +27,7 @@ log = logging.getLogger("moksha.hub")
 
 class RsyncConsumer(FedmsgConsumer):
     topic = "org.fedoraproject.compose"
-    config_key = 'fedmsg-downloader.consumer.enabled'
+    config_key = 'fedmsg-download.consumer.enabled'
 
     def __init__(self, hub):
         self.hub = hub

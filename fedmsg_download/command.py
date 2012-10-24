@@ -19,7 +19,7 @@
 #
 from fedmsg.commands import command
 
-from fedmsg_downloader.consumer import RsyncConsumer
+from fedmsg_download.consumer import RsyncConsumer
 
 extra_args = []
 

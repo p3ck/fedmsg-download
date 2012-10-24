@@ -4,7 +4,7 @@
 %global modname fedmsg-download
 
 Name:           fedmsg-download
-Version:        0.1.0
+Version:        0.1.1
 Release:        1%{?dist}
 Summary:        Fedora Infrastructure real-time messaging consumer for downloads
 Group:          Applications/Internet
@@ -16,24 +16,7 @@ BuildArch:      noarch
 
 BuildRequires:  python-devel
 BuildRequires:  python-setuptools-devel
-BuildRequires:  python-moksha-hub >= 1.0.2
-BuildRequires:  python-bunch
-BuildRequires:  orbited
-BuildRequires:  python-nose
-BuildRequires:  python-daemon
-BuildRequires:  python-requests
-BuildRequires:  m2crypto
-BuildRequires:  python-m2ext
-BuildRequires:  python-pygments
-BuildRequires:  python-fabulous
 BuildRequires:  fedmsg
-
-%if %{?rhel}%{!?rhel:0} >= 6
-
-%else
-BuildRequires: python-repoze-what-quickstart
-%endif
-
 Requires:       fedmsg
 
 %if %{?rhel}%{!?rhel:0} <= 6
@@ -92,5 +75,8 @@ fi
 
 
 %changelog
+* Wed Oct 24 2012 Bill Peck <bpeck@redhat.com> 0.1.1-1
+- new package built with tito
+
 * Wed Oct 24 2012 Bill Peck <bpeck@redhat.com> - 0.1.0-1
 - Initial packaging.

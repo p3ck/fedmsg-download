@@ -65,28 +65,28 @@ if sys.version_info[0] == 2 and sys.version_info[1] <= 6:
 
 
 setup(
-    name='fedmsg-downloader',
-    version='0.1.0',
+    name='fedmsg-download',
+    version='0.1.1',
     description="Fedora Messaging Downloading Consumer",
     long_description="Fedora Messaging Downloading Consumer",
     author='Bill Peck',
     author_email='bpeck@redhat.com',
-    url='http://github.com/bpeck/fedmsg-downloader/',
+    url='http://github.com/bpeck/fedmsg-download/',
     license='LGPLv2+',
     install_requires=install_requires,
     tests_require=tests_require,
     test_suite='nose.collector',
     packages=[
-        'fedmsg_downloader',
+        'fedmsg_download',
     ],
     include_package_data=True,
     zip_safe=False,
     entry_points={
         'console_scripts': [
-            "fedmsg-downloader=fedmsg_downloader.command:download",
+            "fedmsg-download=fedmsg_download.command:download",
         ],
         'moksha.consumer': [
-            "downloader=fedmsg_downloader.consumer:RsyncConsumer",
+            "downloader=fedmsg_download.consumer:RsyncConsumer",
         ],
         'moksha.producer': [
         ],

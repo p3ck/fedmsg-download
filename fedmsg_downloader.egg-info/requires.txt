@@ -1,7 +1,0 @@
-pyzmq
-fabulous
-kitchen
-moksha.hub
-requests
-pygments
-fedmsg

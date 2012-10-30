@@ -9,8 +9,8 @@ Release:        1%{?dist}
 Summary:        Fedora Infrastructure real-time messaging consumer for downloads
 Group:          Applications/Internet
 License:        LGPLv2+
-URL:            http://github.com/bpeck/%{name}
-Source0:        http://pypi.python.org/packages/source/f/%{name}/%{name}-%{version}.tar.gz
+URL:            http://github.com/p3ck/%{name}
+Source0:        http://github.com/p3ck/%{name}/tarball/%{name}-%{version}
 
 BuildArch:      noarch
 

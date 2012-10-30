@@ -66,9 +66,6 @@ fi
 %{_bindir}/%{name}
 %{_sysconfdir}/init.d/%{name}
 
-%attr(755, fedmsg, fedmsg) %dir %{_var}/log/%{modname}
-%attr(755, fedmsg, fedmsg) %dir %{_var}/run/%{modname}
-
 %{python_sitelib}/%{modname}/
 %{python_sitelib}/%{modname}-%{version}-py%{pyver}.egg-info/
 

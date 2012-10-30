@@ -4,7 +4,7 @@
 %global modname fedmsg_download
 
 Name:           fedmsg-download
-Version:        0.1.3
+Version:        0.1.4
 Release:        1%{?dist}
 Summary:        Fedora Infrastructure real-time messaging consumer for downloads
 Group:          Applications/Internet
@@ -76,6 +76,9 @@ fi
 
 
 %changelog
+* Tue Oct 30 2012 Bill Peck <bpeck@redhat.com> 0.1.4-1
+- updated topic filtering. (bpeck@redhat.com)
+
 * Wed Oct 24 2012 Bill Peck <bpeck@redhat.com> 0.1.3-1
 - new package built with tito
 

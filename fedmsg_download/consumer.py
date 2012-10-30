@@ -19,14 +19,16 @@
 #
 import fedmsg
 import re
+import os
 from fedmsg.consumers import FedmsgConsumer
+from fedmsg_download.download import Downloader
 
 import logging
 log = logging.getLogger("moksha.hub")
 
 
 class RsyncConsumer(FedmsgConsumer):
-    topic = "org.fedoraproject.compose"
+    topic = "org.fedoraproject.*"
     config_key = 'fedmsg-download.consumer.enabled'
 
     def __init__(self, hub):
@@ -34,7 +36,14 @@ class RsyncConsumer(FedmsgConsumer):
         self.DBSession = None
 
         settings = hub.config.get('download')
+        self.local_path = settings.get('local_path')
+        self.rsync_base = settings.get('rsync_base')
+        self.rsync_opts = settings.get('rsync_opts')
+        self.delete_old = settings.get('delete_old')
+        self.import_command = settings.get('import_command')
         self.regex_topic = re.compile(settings.get('filter_topic', ''))
+        if not self.local_path:
+            raise Exception('local_path not configured!')
 
         return super(RsyncConsumer, self).__init__(hub)
 
@@ -43,9 +52,19 @@ class RsyncConsumer(FedmsgConsumer):
             branched.rsync.complete
             rawhide.rsync.complete
         """
-        log.info("Duhhhh... got: %r" % msg)
-        topic = msg['body']['topic']
-        if self.regex_topic.search(topic):
-            branch = msg['body']['msg'].get('branch', None)
-            log.info("branch: %s" % branch)
-            # sync it down...
+        topic, body = msg.get('topic'), msg.get('body')
+        log.debug('topic=%s' % topic)
+        if self.regex_topic.search(topic) and 'msg' in body:
+            branch = body['msg'].get('branch', None)
+            log.info("Rsync Complete for branch: %s" % branch)
+            if branch:
+                # sync it down...
+                try:
+                    download = Downloader(os.path.join(self.rsync_base, branch), branch)
+                except Exception, e:
+                    log.critical(e)
+                    return 1
+                return download.sync_it_down(self.local_path,
+                                             self.rsync_opts,
+                                             self.delete_old,
+                                             self.import_command)

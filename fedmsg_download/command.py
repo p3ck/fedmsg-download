@@ -21,7 +21,14 @@ from fedmsg.commands import command
 
 from fedmsg_download.consumer import RsyncConsumer
 
-extra_args = []
+extra_args = [
+    (['--verbose'], {
+        'dest': 'verbose',
+        'action': 'store_true',
+        'default': False,
+        'help': "Verbose logging.",
+    }),
+]
 
 
 @command(name="fedmsg-download", extra_args=extra_args, daemonizable=True)

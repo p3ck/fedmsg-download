@@ -9,8 +9,8 @@ Release:        1%{?dist}
 Summary:        Fedora Infrastructure real-time messaging consumer for downloads
 Group:          Applications/Internet
 License:        LGPLv2+
-URL:            http://github.com/bpeck/fedmsg-download
-Source0:        http://pypi.python.org/packages/source/f/%{modname}/%{modname}-%{version}.tar.gz
+URL:            http://github.com/bpeck/%{name}
+Source0:        http://pypi.python.org/packages/source/f/%{name}/%{name}-%{version}.tar.gz
 
 BuildArch:      noarch
 
@@ -18,6 +18,7 @@ BuildRequires:  python-devel
 BuildRequires:  python-setuptools-devel
 BuildRequires:  fedmsg
 Requires:       fedmsg
+Requires:	pexpect
 
 %if %{?rhel}%{!?rhel:0} <= 6
 BuildRequires:  python-ordereddict
@@ -32,7 +33,7 @@ fedmsg is received.
 
 
 %prep
-%setup -q -n %{modname}-%{version}
+%setup -q -n %{name}-%{version}
 
 %build
 %{__python} setup.py build
@@ -48,25 +49,25 @@ fedmsg is received.
 %{__mkdir_p} %{buildroot}/%{_var}/log/%{modname}
 
 %{__mkdir_p} %{buildroot}%{_sysconfdir}/init.d
-%{__install} init.d/fedmsg-download.init %{buildroot}%{_sysconfdir}/init.d/fedmsg-download
+%{__install} init.d/fedmsg-download.init %{buildroot}%{_sysconfdir}/init.d/%{name}
 
 
 %post
-/sbin/chkconfig --add fedmsg-download
+/sbin/chkconfig --add %{name}
 
 %preun
 if [ $1 -eq 0 ]; then
-    /sbin/service fedmsg-download stop >/dev/null 2>&1
-    /sbin/chkconfig --del fedmsg-download
+    /sbin/service %{name} stop >/dev/null 2>&1
+    /sbin/chkconfig --del %{name}
 fi
 
 %files
 %doc LICENSE
-%{_bindir}/fedmsg-download
-%{_sysconfdir}/init.d/fedmsg-download
+%{_bindir}/%{name}
+%{_sysconfdir}/init.d/%{name}
 
-%attr(755, %{modname}, %{modname}) %dir %{_var}/log/%{modname}
-%attr(755, %{modname}, %{modname}) %dir %{_var}/run/%{modname}
+%attr(755, fedmsg, fedmsg) %dir %{_var}/log/%{modname}
+%attr(755, fedmsg, fedmsg) %dir %{_var}/run/%{modname}
 
 %{python_sitelib}/%{modname}/
 %{python_sitelib}/%{modname}-%{version}-py%{pyver}.egg-info/

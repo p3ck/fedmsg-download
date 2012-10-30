@@ -20,9 +20,16 @@
 config = dict(
     download=
         dict(
+            # You must configure local_path in order for this to work!
+            # This is where the downloads will be mirrored to.
+            local_path=None,
+            rsync_opts='--exclude debug --exclude source',
+            #import_command='beaker-import http://FQDN/distros/Fedora/development/\%(tree)s',
+            rsync_base='rsync://dl.fedoraproject.org/fedora-linux-development',
+            delete_old=True,
             # The following topics will trigger an rsync
             # If you only want branched then use
-            # filter_topics='branched.rsync.complete'
-            filter_topic='rsync.complete',
+            # filter_topics='compose\.branched\.rsync\.complete'
+            filter_topic='compose\..*\.rsync\.complete',
         ),
 )

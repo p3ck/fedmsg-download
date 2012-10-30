@@ -4,7 +4,7 @@
 %global modname fedmsg_download
 
 Name:           fedmsg-download
-Version:        0.1.6
+Version:        0.1.7
 Release:        1%{?dist}
 Summary:        Fedora Infrastructure real-time messaging consumer for downloads
 Group:          Applications/Internet
@@ -76,6 +76,10 @@ fi
 
 
 %changelog
+* Tue Oct 30 2012 Bill Peck <bpeck@redhat.com> 0.1.7-1
+- last time trying to get github url to work. :-( (bpeck@redhat.com)
+- one last update to work with github's urls (bpeck@redhat.com)
+
 * Tue Oct 30 2012 Bill Peck <bpeck@redhat.com> 0.1.6-1
 - Updated source locations to github. (bpeck@redhat.com)
 

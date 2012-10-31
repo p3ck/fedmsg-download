@@ -1,4 +1,4 @@
-# This file is part of fedmsg.
+# This file is part of fedmsg-download.
 # Copyright (C) 2012 Red Hat, Inc.
 #
 # fedmsg is free software; you can redistribute it and/or
@@ -16,6 +16,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 #
 # Authors:  Ralph Bean <rbean@redhat.com>
+# Authors:  Bill Peck <bpeck@redhat.com>
 #
 
 try:
@@ -66,7 +67,7 @@ setup(
     long_description="Fedora Messaging Downloading Consumer",
     author='Bill Peck',
     author_email='bpeck@redhat.com',
-    url='http://github.com/bpeck/fedmsg-download/',
+    url='http://github.com/p3ck/fedmsg-download/',
     license='LGPLv2+',
     install_requires=install_requires,
     tests_require=tests_require,

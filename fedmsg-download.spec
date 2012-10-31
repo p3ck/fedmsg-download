@@ -16,8 +16,8 @@ BuildArch:      noarch
 
 BuildRequires:  python-devel
 BuildRequires:  python-setuptools-devel
-BuildRequires:  fedmsg
-Requires:       fedmsg
+BuildRequires:  fedmsg >= 0.4.0
+Requires:       fedmsg >= 0.4.0
 Requires:	pexpect
 
 %if %{?rhel}%{!?rhel:0} <= 6

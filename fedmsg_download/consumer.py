@@ -32,9 +32,6 @@ class RsyncConsumer(FedmsgConsumer):
     config_key = 'fedmsg-download.consumer.enabled'
 
     def __init__(self, hub):
-        self.hub = hub
-        self.DBSession = None
-
         settings = hub.config.get('download')
         self.local_path = settings.get('local_path')
         self.rsync_base = settings.get('rsync_base')

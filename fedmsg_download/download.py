@@ -6,6 +6,7 @@ import ConfigParser
 import tempfile
 import pexpect
 import shutil
+import datetime
 
 log = logging.getLogger("moksha.hub")
 
@@ -40,12 +41,15 @@ class Downloader(object):
             tmp_file = tempfile.mktemp()
             self.rsync.get(self.parser.infofile, tmp_file)
             self.parser.parse(tmp_file)
+        except DX, e:
+            pass
         finally:
             if os.path.isfile(tmp_file):
                 os.unlink(tmp_file)
 
     def sync_it_down(self, local_dir, rsync_opts, delete_old, command):
-        product_name = self.parser.get('product','name')
+        today = str(datetime.date.today())
+        product_name = self.parser.get('product','name', "%s-%s" %(self.branch, today))
 
         # Default options
         opts = '--archive --verbose --delete'

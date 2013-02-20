@@ -17,37 +17,42 @@
 #
 # Authors:  Bill Peck <bpeck@redhat.com>
 #
-from fedmsg.commands import command
+from fedmsg.commands import BaseCommand
 
 from fedmsg_download.consumer import RsyncConsumer
 
-extra_args = [
-    (['--verbose'], {
-        'dest': 'verbose',
-        'action': 'store_true',
-        'default': False,
-        'help': "Verbose logging.",
-    }),
-]
-
-
-@command(name="fedmsg-download", extra_args=extra_args, daemonizable=True)
-def download(**kw):
+class DownloadCommand(BaseCommand):
     """ Watch the compose topic for rsync.complete messages
 
     This is highly configurable by way of the :term:`download` config value.
     """
 
-    # Do just like in fedmsg.commands.hub and mangle fedmsg-config.py to work
-    # with moksha's expected configuration.
-    moksha_options = dict(
-        zmq_subscribe_endpoints=','.join(
-            ','.join(bunch) for bunch in kw['endpoints'].values()
-        ),
-    )
-    kw.update(moksha_options)
+    name = "fedmsg-download"
+    extra_args = [
+        (['--verbose'], {
+            'dest': 'verbose',
+            'action': 'store_true',
+            'default': False,
+            'help': "Verbose logging.",
+        }),
+    ]
+    daemonizable = True
 
-    kw[RsyncConsumer.config_key] = True
+    def run(self):
+        # Do just like in fedmsg.commands.hub and mangle fedmsg-config.py to work
+        # with moksha's expected configuration.
+        moksha_options = dict(
+            zmq_subscribe_endpoints=','.join(
+                ','.join(bunch) for bunch in self.config['endpoints'].values()
+            ),
+        )
+        self.config.update(moksha_options)
 
-    from moksha.hub import main
-    main(options=kw, consumers=[RsyncConsumer])
+        self.config[RsyncConsumer.config_key] = True
+
+        from moksha.hub import main
+        main(options=self.config, consumers=[RsyncConsumer])
+
+def download():
+    command = DownloadCommand()
+    command.execute()

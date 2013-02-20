@@ -62,7 +62,7 @@ if sys.version_info[0] == 2 and sys.version_info[1] <= 6:
 
 setup(
     name='fedmsg-download',
-    version='0.1.8',
+    version='0.1.9',
     description="Fedora Messaging Downloading Consumer",
     long_description="Fedora Messaging Downloading Consumer",
     author='Bill Peck',

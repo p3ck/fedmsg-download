@@ -4,7 +4,7 @@
 %global modname fedmsg_download
 
 Name:           fedmsg-download
-Version:        0.1.9
+Version:        0.1.10
 Release:        1%{?dist}
 Summary:        Fedora Infrastructure real-time messaging consumer for downloads
 Group:          Applications/Internet
@@ -73,6 +73,9 @@ fi
 
 
 %changelog
+* Wed Sep 17 2014 Bill Peck <bpeck@redhat.com> 0.1.10-1
+- fix for locking in init script (bpeck@redhat.com)
+
 * Wed Feb 20 2013 Bill Peck <bpeck@redhat.com> 0.1.9-1
 - Update command syntax to newer fedmsg. Fix download.py to support downloading
   rawhide without .composeinfo (bpeck@redhat.com)

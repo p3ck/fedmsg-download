@@ -33,16 +33,20 @@ class DX(DownloadException):
 
 
 class Downloader(object):
-    def __init__(self, rsync_url=None, branch=None):
+    def __init__(self, rsync_url=None, branch=None, req_compose=True):
         self.rsync = RSync(rsync_url)
         self.branch = branch
         self.parser = CParser()
+        self.req_compose = req_compose
         try:
             tmp_file = tempfile.mktemp()
             self.rsync.get(self.parser.infofile, tmp_file)
             self.parser.parse(tmp_file)
         except DX, e:
-            pass
+            if self.req_compose:
+                raise
+            else:
+                pass
         finally:
             if os.path.isfile(tmp_file):
                 os.unlink(tmp_file)

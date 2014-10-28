@@ -31,5 +31,6 @@ config = dict(
             # If you only want branched then use
             # filter_topics='compose\.branched\.rsync\.complete'
             filter_topic='compose\..*\.rsync\.complete',
+            req_compose=True,
         ),
 )

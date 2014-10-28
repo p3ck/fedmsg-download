@@ -8,7 +8,7 @@ import pexpect
 import shutil
 import datetime
 
-log = logging.getLogger("moksha.hub")
+log = logging.getLogger(__name__)
 
 def run_command(commandline):
     if log.isEnabledFor(logging.DEBUG):

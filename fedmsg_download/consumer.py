@@ -24,7 +24,7 @@ from fedmsg.consumers import FedmsgConsumer
 from fedmsg_download.download import Downloader
 
 import logging
-log = logging.getLogger("moksha.hub")
+log = logging.getLogger(__name__)
 
 
 class RsyncConsumer(FedmsgConsumer):

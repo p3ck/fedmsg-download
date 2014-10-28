@@ -17,6 +17,9 @@
 #
 # Authors:  Ralph Bean <rbean@redhat.com>, Bill Peck <bpeck@redhat.com>
 #
+
+bare_format = "[%(asctime)s][%(name)10s %(levelname)7s] %(message)s"
+
 config = dict(
     download=
         dict(
@@ -33,4 +36,28 @@ config = dict(
             filter_topic='compose\..*\.rsync\.complete',
             req_compose=True,
         ),
+    logging=dict(
+        version=1,
+        formatters=dict(
+            bare={
+                "datefmt": "%Y-%m-%d %H:%M:%S",
+                "format": bare_format
+            },
+        ),
+        handlers=dict(
+            console={
+                "class": "logging.StreamHandler",
+                "formatter": "bare",
+                "level": "DEBUG",
+                "stream": "ext://sys.stdout",
+            }
+        ),
+        loggers=dict(
+            fedmsg_download={
+                "level": "DEBUG",
+                "propagate": False,
+                "handlers": ["console"],
+            },
+        ),
+    ),
 )

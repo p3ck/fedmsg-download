@@ -5,7 +5,7 @@
 
 Name:           fedmsg-download
 Version:        0.1.11
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Fedora Infrastructure real-time messaging consumer for downloads
 Group:          Applications/Internet
 License:        LGPLv2+
@@ -73,6 +73,9 @@ fi
 
 
 %changelog
+* Tue Oct 28 2014 Bill Peck <bpeck@redhat.com> 0.1.11-2
+- Accidentally left debug level logging as the default (bpeck@redhat.com)
+
 * Tue Oct 28 2014 Bill Peck <bpeck@redhat.com> 0.1.11-1
 - make it easier to set logging to DEBUG level (bpeck@redhat.com)
 - allow rsyncing composes only if they have a valid .composeinfo file

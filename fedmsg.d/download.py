@@ -54,7 +54,7 @@ config = dict(
         ),
         loggers=dict(
             fedmsg_download={
-                "level": "DEBUG",
+                "level": "INFO",
                 "propagate": False,
                 "handlers": ["console"],
             },

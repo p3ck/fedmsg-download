@@ -4,7 +4,7 @@
 %global modname fedmsg_download
 
 Name:           fedmsg-download
-Version:        0.1.10
+Version:        0.1.11
 Release:        1%{?dist}
 Summary:        Fedora Infrastructure real-time messaging consumer for downloads
 Group:          Applications/Internet
@@ -73,6 +73,11 @@ fi
 
 
 %changelog
+* Tue Oct 28 2014 Bill Peck <bpeck@redhat.com> 0.1.11-1
+- make it easier to set logging to DEBUG level (bpeck@redhat.com)
+- allow rsyncing composes only if they have a valid .composeinfo file
+  (bpeck@redhat.com)
+
 * Wed Sep 17 2014 Bill Peck <bpeck@redhat.com> 0.1.10-1
 - fix for locking in init script (bpeck@redhat.com)
 

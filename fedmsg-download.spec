@@ -5,7 +5,7 @@
 
 Name:           fedmsg-download
 Version:        0.1.11
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Fedora Infrastructure real-time messaging consumer for downloads
 Group:          Applications/Internet
 License:        LGPLv2+
@@ -15,12 +15,13 @@ Source0:        http://github.com/p3ck/%{name}/tarball/%{name}-%{version}#/%{nam
 BuildArch:      noarch
 
 BuildRequires:  python-devel
-BuildRequires:  python-setuptools-devel
+BuildRequires:  python-setuptools
 BuildRequires:  fedmsg >= 0.4.0
 Requires:       fedmsg >= 0.4.0
 Requires:	pexpect
+Requires:	python-setuptools
 
-%if %{?rhel}%{!?rhel:0} <= 6
+%if 0%{?rhel}%{?fedora} <= 6
 BuildRequires:  python-ordereddict
 BuildRequires:  python-argparse
 Requires:       python-ordereddict

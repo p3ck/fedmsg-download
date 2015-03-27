@@ -74,6 +74,9 @@ fi
 
 
 %changelog
+* Fri Mar 27 2015 Bill Peck <bpeck@redhat.com> 0.1.11-3
+- Update spec file for newer fedora (bpeck@redhat.com)
+
 * Tue Oct 28 2014 Bill Peck <bpeck@redhat.com> 0.1.11-2
 - Accidentally left debug level logging as the default (bpeck@redhat.com)
 

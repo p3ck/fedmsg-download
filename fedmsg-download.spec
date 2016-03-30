@@ -11,7 +11,7 @@
 %endif
 
 Name:           fedmsg-download
-Version:        0.1.12
+Version:        0.1.13
 Release:        1%{?dist}
 Summary:        Fedora Infrastructure real-time messaging consumer for downloads
 Group:          Applications/Internet
@@ -109,6 +109,9 @@ fedmsg is received.
 
 
 %changelog
+* Wed Mar 30 2016 Bill Peck <bpeck@redhat.com> 0.1.13-1
+- paperbag release (bpeck@redhat.com)
+
 * Wed Mar 30 2016 Bill Peck <bpeck@redhat.com> 0.1.12-1
 - update for systemd (bpeck@redhat.com)
 

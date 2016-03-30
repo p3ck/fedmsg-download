@@ -3,6 +3,13 @@
 
 %global modname fedmsg_download
 
+# Got Systemd?
+%if 0%{?fedora} >= 18 || 0%{?rhel} >= 7
+%global with_systemd 1
+%else
+%global with_systemd 0
+%endif
+
 Name:           fedmsg-download
 Version:        0.1.11
 Release:        3%{?dist}
@@ -28,6 +35,19 @@ Requires:       python-ordereddict
 Requires:       python-argparse
 %endif
 
+%if %{with_systemd}
+BuildRequires:          systemd-units
+Requires(post):         systemd
+Requires(pre):          systemd
+Requires(postun):       systemd
+%else
+Requires(post): chkconfig
+Requires(preun): chkconfig
+# This is for /sbin/service
+Requires(preun): initscripts
+Requires(postun): initscripts
+%endif
+
 %description
 Download Consumer which downloads latest branched and rawhide builds when a message from 
 fedmsg is received.
@@ -49,23 +69,38 @@ fedmsg is received.
 %{__mkdir_p} %{buildroot}/%{_var}/run/%{modname}
 %{__mkdir_p} %{buildroot}/%{_var}/log/%{modname}
 
+%if %{with_systemd}
+%{__mkdir_p} %{buildroot}%{_unitdir}
+%{__install} init.d/fedmsg-download.service %{buildroot}%{_unitdir}/%{name}.service
+%else
 %{__mkdir_p} %{buildroot}%{_sysconfdir}/init.d
 %{__install} init.d/fedmsg-download.init %{buildroot}%{_sysconfdir}/init.d/%{name}
+%endif
 
 
 %post
-/sbin/chkconfig --add %{name}
+%if %{with_systemd}
+%systemd_post %{name}
+%endif
 
 %preun
-if [ $1 -eq 0 ]; then
-    /sbin/service %{name} stop >/dev/null 2>&1
-    /sbin/chkconfig --del %{name}
-fi
+%if %{with_systemd}
+%systemd_preun  %{name}
+%endif
+
+%postun
+%if %{with_systemd}
+%systemd_postun_with_restart %{name}
+%endif
 
 %files
 %doc LICENSE
 %{_bindir}/%{name}
-%{_sysconfdir}/init.d/%{name}
+%if %{with_systemd}
+%attr(0644, root, root)%{_unitdir}/%{name}.service
+%else
+%attr(0755, root, root)%{_sysconfdir}/init.d/%{name}
+%endif
 
 %{python_sitelib}/%{modname}/
 %{python_sitelib}/%{modname}-%{version}-py%{pyver}.egg-info/

@@ -1,0 +1,13 @@
+Unit]
+Description=fedmsg downloader
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/fedmsg-download
+Type=simple
+User=fedmsg
+Group=fedmsg
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

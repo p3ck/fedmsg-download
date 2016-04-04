@@ -33,11 +33,12 @@ class DX(DownloadException):
 
 
 class Downloader(object):
-    def __init__(self, rsync_url=None, branch=None, req_compose=True):
+    def __init__(self, rsync_url=None, branch=None, req_compose=True, ignore_name=False):
         self.rsync = RSync(rsync_url)
         self.branch = branch
         self.parser = CParser()
         self.req_compose = req_compose
+        self.ignore_name = ignore_name
         try:
             tmp_file = tempfile.mktemp()
             self.rsync.get(self.parser.infofile, tmp_file)
@@ -52,8 +53,9 @@ class Downloader(object):
                 os.unlink(tmp_file)
 
     def sync_it_down(self, local_dir, rsync_opts, delete_old, command):
-        today = str(datetime.date.today())
-        product_name = self.parser.get('product','name', "%s-%s" %(self.branch, today))
+        product_name = "%s-%s" % ( self.branch, str(datetime.date.today()))
+        if not self.ignore_name:
+            product_name = self.parser.get('product','name', product_name)
 
         # Default options
         opts = '--archive --verbose --delete'

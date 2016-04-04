@@ -37,7 +37,8 @@ class RsyncConsumer(FedmsgConsumer):
         self.rsync_base = settings.get('rsync_base')
         self.rsync_opts = settings.get('rsync_opts')
         self.delete_old = settings.get('delete_old')
-	self.req_compose = settings.get('req_compose', True)
+        self.req_compose = settings.get('req_compose', True)
+        self.ignore_name = settings.get('ignore_name', False)
         self.import_command = settings.get('import_command')
         self.regex_topic = re.compile(settings.get('filter_topic', ''))
         if not self.local_path:
@@ -58,7 +59,10 @@ class RsyncConsumer(FedmsgConsumer):
             if branch:
                 # sync it down...
                 try:
-                    download = Downloader(os.path.join(self.rsync_base, branch), branch, self.req_compose)
+                    download = Downloader(os.path.join(self.rsync_base, branch),
+                                          branch,
+                                          self.req_compose,
+                                          self.ignore_name)
                 except Exception, e:
                     log.critical(e)
                     return 1

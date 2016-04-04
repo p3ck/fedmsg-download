@@ -34,7 +34,11 @@ config = dict(
             # If you only want branched then use
             # filter_topics='compose\.branched\.rsync\.complete'
             filter_topic='compose\..*\.rsync\.complete',
+            # Require a .composeinfo file to be present in order to sync.
             req_compose=True,
+            # Ignore the name provided in the .composeinfo file? If True it will
+            # use <branch>-<date>
+            ignore_name=False,
         ),
     logging=dict(
         version=1,

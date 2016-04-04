@@ -111,6 +111,8 @@ class RSync(object):
         log.debug(commandline)
         stdout, rc = run_command(commandline)
         if rc != 0:
+            last_10_lines = '\r\n'.join(stdout.split('\r\n')[-10:])
+            log.info(last_10_lines)
             raise DX('Unable to rsync %s -> %s' % (remote_path, local_filename))
         return rc
 

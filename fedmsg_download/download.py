@@ -4,20 +4,29 @@ from optparse import OptionParser
 import logging
 import ConfigParser
 import tempfile
-import pexpect
 import shutil
 import datetime
+from subprocess import Popen, PIPE
+import select
 
 log = logging.getLogger(__name__)
 
 def run_command(commandline):
-    if log.isEnabledFor(logging.DEBUG):
-        logfile=sys.stdout
-    else:
-        logfile = None
-    (command_output, exitstatus) = pexpect.run(commandline, withexitstatus=1,
-                                       logfile=logfile, timeout=None)
-    return command_output, exitstatus
+    command = commandline.split()
+    proc = Popen(command, stdout=PIPE, stderr=PIPE)
+    input = [proc.stdout, proc.stderr]
+    running = 1
+    while running:
+        inputready, outputready, exceptready = select.select(input,[],[],5)
+        for s in inputready:
+            for line in s:
+               if s == proc.stderr:
+                   log.info("run_command: %s" %  line)
+               else:
+                   log.debug("run_command: %s" %  line)
+        if proc.poll() is not None:
+            break
+    return proc.returncode
 
 class DownloadException(Exception):
 
@@ -92,7 +101,7 @@ class Downloader(object):
         if command:
             commandline = command % dict(tree = product_name)
             log.debug(commandline)
-            stdout, rc = run_command(commandline)
+            rc = run_command(commandline)
             if rc != 0:
                 raise DX('Unable to run command %s' % commandline)
         return 0
@@ -111,10 +120,8 @@ class RSync(object):
                                        remote_path,
                                        local_filename)
         log.debug(commandline)
-        stdout, rc = run_command(commandline)
+        rc = run_command(commandline)
         if rc != 0:
-            last_10_lines = '\r\n'.join(stdout.split('\r\n')[-10:])
-            log.info(last_10_lines)
             raise DX('Unable to rsync %s -> %s' % (remote_path, local_filename))
         return rc
 

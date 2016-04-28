@@ -21,9 +21,9 @@ def run_command(commandline):
         for s in inputready:
             for line in s:
                if s == proc.stderr:
-                   log.info("run_command: %s" %  line)
+                   log.error("run_command: %s" %  line)
                else:
-                   log.debug("run_command: %s" %  line)
+                   log.info("run_command: %s" %  line)
         if proc.poll() is not None:
             break
     return proc.returncode

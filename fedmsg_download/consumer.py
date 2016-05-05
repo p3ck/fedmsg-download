@@ -22,14 +22,22 @@ import re
 import os
 from fedmsg.consumers import FedmsgConsumer
 from fedmsg_download.download import Downloader
+from threading import Thread
+from Queue import Queue
 
 import logging
 log = logging.getLogger(__name__)
 
+def download_thread(queue):
+    while True:
+        download = queue.get()
+        download.sync_it_down()
+        queue.task_done()
 
 class RsyncConsumer(FedmsgConsumer):
     topic = "org.fedoraproject.*"
     config_key = 'fedmsg-download.consumer.enabled'
+    rsync_queue = Queue()
 
     def __init__(self, hub):
         settings = hub.config.get('download')
@@ -44,7 +52,11 @@ class RsyncConsumer(FedmsgConsumer):
         if not self.local_path:
             raise Exception('local_path not configured!')
 
-        return super(RsyncConsumer, self).__init__(hub)
+        worker = Thread(target=download_thread, args=(self.rsync_queue,))
+        worker.setDaemon(True)
+        worker.start()
+
+        super(RsyncConsumer, self).__init__(hub)
 
     def consume(self, msg):
         """ Look for topic messages that match the config
@@ -62,11 +74,12 @@ class RsyncConsumer(FedmsgConsumer):
                     download = Downloader(os.path.join(self.rsync_base, branch),
                                           branch,
                                           self.req_compose,
-                                          self.ignore_name)
+                                          self.ignore_name,
+                                          self.local_path,
+                                          self.rsync_opts,
+                                          self.delete_old,
+                                          self.import_command)
                 except Exception, e:
                     log.critical(e)
                     return 1
-                return download.sync_it_down(self.local_path,
-                                             self.rsync_opts,
-                                             self.delete_old,
-                                             self.import_command)
+                self.rsync_queue.put(download)

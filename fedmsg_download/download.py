@@ -42,12 +42,17 @@ class DX(DownloadException):
 
 
 class Downloader(object):
-    def __init__(self, rsync_url=None, branch=None, req_compose=True, ignore_name=False):
+    def __init__(self, rsync_url=None, branch=None, req_compose=True, ignore_name=False,
+                 local_dir=None, rsync_opts=None, delete_old=False, command=None):
         self.rsync = RSync(rsync_url)
         self.branch = branch
         self.parser = CParser()
         self.req_compose = req_compose
         self.ignore_name = ignore_name
+        self.local_dir = local_dir
+        self.rsync_opts = rsync_opts
+        self.delete_old = delete_old
+        self.command = command
         try:
             tmp_file = tempfile.mktemp()
             self.rsync.get(self.parser.infofile, tmp_file)
@@ -61,7 +66,7 @@ class Downloader(object):
             if os.path.isfile(tmp_file):
                 os.unlink(tmp_file)
 
-    def sync_it_down(self, local_dir, rsync_opts, delete_old, command):
+    def sync_it_down(self):
         product_name = "%s-%s" % ( self.branch, str(datetime.date.today()))
         if not self.ignore_name:
             product_name = self.parser.get('product','name', product_name)
@@ -69,15 +74,15 @@ class Downloader(object):
         # Default options
         opts = '--archive --verbose --delete'
         # Add in rsync_opts
-        if rsync_opts:
-            opts = '%s %s' % (opts, rsync_opts)
+        if self.rsync_opts:
+            opts = '%s %s' % (opts, self.rsync_opts)
         # read 'latest' symlink from local_dir
-        latest = os.path.realpath('%s/latest-%s' % (local_dir, self.branch))
+        latest = os.path.realpath('%s/latest-%s' % (self.local_dir, self.branch))
         # Add in link-dest if symlink points to valid dir
         if os.path.isdir(latest):
             opts = opts + ' --link-dest=%s' % latest
 
-        local_path = os.path.join(local_dir, product_name)
+        local_path = os.path.join(self.local_dir, product_name)
         # compare local and remote
         if os.path.realpath(local_path) == latest:
             log.info('Already have %s' % local_path)
@@ -88,18 +93,18 @@ class Downloader(object):
         self.rsync.get('', local_path, opts)
 
         # update symlink to newly downloaded
-        if os.path.exists(os.path.join(local_dir,'latest-%s' % self.branch)):
-            os.unlink(os.path.join(local_dir,'latest-%s' % self.branch))
-        os.symlink(product_name, '%s/latest-%s' % (local_dir, self.branch))
+        if os.path.exists(os.path.join(self.local_dir,'latest-%s' % self.branch)):
+            os.unlink(os.path.join(self.local_dir,'latest-%s' % self.branch))
+        os.symlink(product_name, '%s/latest-%s' % (self.local_dir, self.branch))
 
         # If delete_old is set remove previous tree
-        if os.path.isdir(latest) and delete_old:
+        if os.path.isdir(latest) and self.delete_old:
             # The variable latest actually holds the old dir
             shutil.rmtree('%s' % latest)
 
         # If command is not None then run it with product_name
-        if command:
-            commandline = command % dict(tree = product_name)
+        if self.command:
+            commandline = self.command % dict(tree = product_name)
             log.debug(commandline)
             rc = run_command(commandline)
             if rc != 0:

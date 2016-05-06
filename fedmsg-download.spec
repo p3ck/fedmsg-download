@@ -11,7 +11,7 @@
 %endif
 
 Name:           fedmsg-download
-Version:        0.1.14
+Version:        0.1.15
 Release:        1%{?dist}
 Summary:        Fedora Infrastructure real-time messaging consumer for downloads
 Group:          Applications/Internet
@@ -109,6 +109,12 @@ fedmsg is received.
 
 
 %changelog
+* Fri May 06 2016 Bill Peck <bpeck@redhat.com> 0.1.15-1
+- do the main downloading in a seperate thread (bpeck@redhat.com)
+- change logging for run command (bpeck@redhat.com)
+- switch to using subprocess.  deal with output as its generated since keeping
+  the entire rsync log may be quite large (bpeck@redhat.com)
+
 * Mon Apr 04 2016 Bill Peck <bpeck@redhat.com> 0.1.14-1
 - allow more flexibility when dealing with broken .composeinfo files.
   (bpeck@redhat.com)

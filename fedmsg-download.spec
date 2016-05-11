@@ -11,7 +11,7 @@
 %endif
 
 Name:           fedmsg-download
-Version:        0.1.15
+Version:        0.1.16
 Release:        1%{?dist}
 Summary:        Fedora Infrastructure real-time messaging consumer for downloads
 Group:          Applications/Internet
@@ -109,6 +109,9 @@ fedmsg is received.
 
 
 %changelog
+* Wed May 11 2016 Bill Peck <bpeck@redhat.com> 0.1.16-1
+- use double quotes is easier to handle in ansible (bpeck@redhat.com)
+
 * Fri May 06 2016 Bill Peck <bpeck@redhat.com> 0.1.15-1
 - do the main downloading in a seperate thread (bpeck@redhat.com)
 - change logging for run command (bpeck@redhat.com)

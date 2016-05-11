@@ -31,7 +31,10 @@ log = logging.getLogger(__name__)
 def download_thread(queue):
     while True:
         download = queue.get()
-        download.sync_it_down()
+        try:
+            download.sync_it_down()
+        except Exception, e:
+            log.critical(e)
         queue.task_done()
 
 class RsyncConsumer(FedmsgConsumer):

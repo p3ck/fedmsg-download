@@ -28,7 +28,9 @@ config = dict(
             local_path=None,
             rsync_opts="--exclude debug --exclude source",
             #import_command="beaker-import http://FQDN/distros/Fedora/development/\%(tree)s",
-            rsync_base="rsync://dl.fedoraproject.org/fedora-linux-development",
+            rsync_base="rsync://dl.fedoraproject.org/fedora-buffet",
+            compose_dirs=dict(primary="fedora/linux/development",
+                              secondary="fedora-secondary/development"),
             delete_old=True,
             # The following topics will trigger an rsync
             # If you only want branched then use

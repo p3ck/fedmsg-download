@@ -46,6 +46,7 @@ class RsyncConsumer(FedmsgConsumer):
         settings = hub.config.get('download')
         self.local_path = settings.get('local_path')
         self.rsync_base = settings.get('rsync_base')
+        self.compose_dirs = settings.get('compose_dirs')
         self.rsync_opts = settings.get('rsync_opts')
         self.delete_old = settings.get('delete_old')
         self.req_compose = settings.get('req_compose', True)
@@ -71,18 +72,23 @@ class RsyncConsumer(FedmsgConsumer):
         if self.regex_topic.search(topic) and 'msg' in body:
             branch = body['msg'].get('branch', None)
             log.info("Rsync Complete for branch: %s" % branch)
-            if branch:
+            if branch and self.compose_dirs:
                 # sync it down...
-                try:
-                    download = Downloader(os.path.join(self.rsync_base, branch),
-                                          branch,
-                                          self.req_compose,
-                                          self.ignore_name,
-                                          self.local_path,
-                                          self.rsync_opts,
-                                          self.delete_old,
-                                          self.import_command)
-                except Exception, e:
-                    log.critical(e)
-                    return 1
-                self.rsync_queue.put(download)
+                for compose_dir in self.compose_dirs:
+                    rsync_base = "%s/%s" % (self.rsync_base,
+                                            self.compose_dirs[compose_dir])
+                    local_path = "%s/%s" % (self.local_path,
+                                            compose_dir)
+                    try:
+                        download = Downloader(os.path.join(rsync_base, branch),
+                                              branch,
+                                              self.req_compose,
+                                              self.ignore_name,
+                                              local_path,
+                                              self.rsync_opts,
+                                              self.delete_old,
+                                              self.import_command)
+                    except Exception, e:
+                        log.critical(e)
+                        return 1
+                    self.rsync_queue.put(download)

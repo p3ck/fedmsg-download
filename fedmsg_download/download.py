@@ -125,7 +125,16 @@ class RSync(object):
                                        remote_path,
                                        local_filename)
         log.debug(commandline)
-        rc = run_command(commandline)
+        loop = 0
+        while loop < 1800:
+            loop += 1
+            rc = run_command(commandline)
+            # rsync rc 5  : Error starting client-server protocol
+            # This usually is because the server is too busy
+            if rc != 5:
+                break
+            else:
+                time.sleep(2)
         if rc != 0:
             raise DX('Unable to rsync %s -> %s' % (remote_path, local_filename))
         return rc

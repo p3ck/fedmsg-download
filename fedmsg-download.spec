@@ -11,7 +11,7 @@
 %endif
 
 Name:           fedmsg-download
-Version:        0.1.18
+Version:        0.1.19
 Release:        1%{?dist}
 Summary:        Fedora Infrastructure real-time messaging consumer for downloads
 Group:          Applications/Internet
@@ -109,6 +109,9 @@ fedmsg is received.
 
 
 %changelog
+* Mon Apr 03 2017 Bill Peck <bpeck@redhat.com> 0.1.19-1
+- Forgot to import time module (bpeck@redhat.com)
+
 * Mon Apr 03 2017 Bill Peck <bpeck@redhat.com> 0.1.18-1
 - Update to support pulling Secondary arches (bpeck@redhat.com)
 

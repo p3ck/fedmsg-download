@@ -87,6 +87,7 @@ class RsyncConsumer(FedmsgConsumer):
                                               local_path,
                                               self.rsync_opts,
                                               self.delete_old,
+                                              compose_dir,
                                               self.import_command)
                     except Exception, e:
                         log.critical(e)

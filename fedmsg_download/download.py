@@ -12,6 +12,25 @@ import select
 
 log = logging.getLogger(__name__)
 
+def _mkdir(newdir):
+    """works the way a good mkdir should :)
+        - already exists, silently complete
+        - regular file in the way, raise an exception
+        - parent directory(ies) does not exist, make them as well
+    """
+    if os.path.isdir(newdir):
+        pass
+    elif os.path.isfile(newdir):
+        raise OSError("a file with the same name as the desired " \
+                      "dir, '%s', already exists." % newdir)
+    else:
+        head, tail = os.path.split(newdir)
+        if head and not os.path.isdir(head):
+            _mkdir(head)
+        #print "_mkdir %s" % repr(newdir)
+        if tail:
+            os.mkdir(newdir)
+
 def run_command(commandline):
     command = commandline.split()
     proc = Popen(command, stdout=PIPE, stderr=PIPE)
@@ -43,8 +62,11 @@ class DX(DownloadException):
 
 
 class Downloader(object):
-    def __init__(self, rsync_url=None, branch=None, req_compose=True, ignore_name=False,
-                 local_dir=None, rsync_opts=None, delete_old=False, command=None):
+    def __init__(self, rsync_url=None, branch=None,
+                 req_compose=True, ignore_name=False,
+                 local_dir=None, rsync_opts=None,
+                 delete_old=False, compose_dir=None,
+                 command=None):
         self.rsync = RSync(rsync_url)
         self.branch = branch
         self.parser = CParser()
@@ -53,6 +75,7 @@ class Downloader(object):
         self.local_dir = local_dir
         self.rsync_opts = rsync_opts
         self.delete_old = delete_old
+        self.compose_dir = compose_dir
         self.command = command
         try:
             tmp_file = tempfile.mktemp()
@@ -89,6 +112,9 @@ class Downloader(object):
             log.info('Already have %s' % local_path)
             return 0
 
+        # Create dir if needed
+        _mkdir(local_path)
+
         # Get it.
         log.info("Downloading: %s"  % product_name)
         self.rsync.get('', local_path, opts)
@@ -105,7 +131,8 @@ class Downloader(object):
 
         # If command is not None then run it with product_name
         if self.command:
-            commandline = self.command % dict(tree = product_name)
+            rel_path = "%s/%s" % (self.compose_dir, product_name)
+            commandline = self.command % dict(tree = rel_path)
             log.debug(commandline)
             rc = run_command(commandline)
             if rc != 0:

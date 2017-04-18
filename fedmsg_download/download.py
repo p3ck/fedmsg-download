@@ -164,7 +164,8 @@ class RSync(object):
             else:
                 time.sleep(2)
         if rc != 0:
-            raise DX('Unable to rsync %s -> %s' % (remote_path, local_filename))
+            raise DX('RC:%s Unable to rsync %s -> %s' %
+                    (rc, remote_path, local_filename))
         return rc
 
 

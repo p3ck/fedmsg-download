@@ -153,16 +153,22 @@ class RSync(object):
                                        remote_path,
                                        local_filename)
         log.debug(commandline)
-        loop = 0
-        while loop < 1800:
-            loop += 1
-            rc = run_command(commandline)
-            # rsync rc 5  : Error starting client-server protocol
-            # This usually is because the server is too busy
-            if rc != 5:
+        # Try the rsync twice to get around horrible
+        # issues on server where files sometimes go away
+        for x in range(0,5):
+            loop = 0
+            while loop < 1800:
+                loop += 1
+                rc = run_command(commandline)
+                # rsync rc 5  : Error starting client-server protocol
+                # This usually is because the server is too busy
+                if rc != 5:
+                    break
+                else:
+                    time.sleep(2)
+            if rc == 0:
                 break
-            else:
-                time.sleep(2)
+            log.debug("Retry: %s" % x)
         if rc != 0:
             raise DX('RC:%s Unable to rsync %s -> %s' %
                     (rc, remote_path, local_filename))

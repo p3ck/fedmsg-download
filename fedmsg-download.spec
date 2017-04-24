@@ -11,7 +11,7 @@
 %endif
 
 Name:           fedmsg-download
-Version:        0.1.20
+Version:        0.1.21
 Release:        1%{?dist}
 Summary:        Fedora Infrastructure real-time messaging consumer for downloads
 Group:          Applications/Internet
@@ -109,6 +109,11 @@ fedmsg is received.
 
 
 %changelog
+* Mon Apr 24 2017 Bill Peck <bpeck@redhat.com> 0.1.21-1
+- Add retry logic to the rsync beyond simply checking for max user connections.
+  (bpeck@redhat.com)
+- Report return code if it fails (bpeck@redhat.com)
+
 * Thu Apr 06 2017 Bill Peck <bpeck@redhat.com> 0.1.20-1
 - Fix path passed to import command. (bpeck@redhat.com)
 
